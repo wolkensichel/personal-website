@@ -1,0 +1,1011 @@
+/* ============================================================
+   Portfolio — Alexander Aigner
+   Flat, typographic, near-monochrome. Colour is a family of three
+   pastels in one hue lane, used sparingly: the gradient rule on the
+   header, the era markers, the tile artwork, and a faint wash.
+   Shared by all pages. No JavaScript.
+   ============================================================ */
+
+/* ── Fonts ──────────────────────────────────────────────── */
+/* Self-hosted variable fonts, subset to Latin. Newsreader for
+   display, Source Sans 3 for text, Source Code Pro for labels —
+   all SIL OFL. ~116 KB total, same-origin, no CDN. */
+
+/* Newsreader keeps its optical-size axis: the browser picks a
+   lighter, wider-spaced cut for the 17px brand line and a tighter,
+   higher-contrast one for a 54px headline, automatically. Weight is
+   pinned at 400 because the serif is never bold anywhere on the
+   site — that alone took the file from 126 KB to 48 KB. Add a bold
+   serif and this needs rebuilding with wght=400:700. */
+@font-face {
+  font-family: "Newsreader";
+  src: url("fonts/newsreader-roman.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("fonts/source-sans-3-roman.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("fonts/source-sans-3-italic.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Source Code Pro";
+  src: url("fonts/source-code-roman.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Tokens ─────────────────────────────────────────────── */
+:root {
+  color-scheme: light dark;
+
+  /* Neutrals in OKLCH: lightness is perceptual, so these steps are
+     evenly spaced by eye, not just by number. */
+  --bg:       oklch(100% 0 0);
+  --line:     oklch(91.5% 0 0);
+  --line-str: oklch(83% 0 0);
+
+  --text:     oklch(19% 0 0);
+  --muted:    oklch(50% 0 0);
+  --faint:    oklch(67% 0 0);
+
+  /* Two poles and a bridge: a dusty blue, a warm greige, a muted
+     rose. Cool and warm in the same family, and the neutral in the
+     middle keeps blue→red out of violet. Same lightness (70%) and
+     chroma (0.05) across all three, so no one tone shouts. */
+  --pastel-a: oklch(70% 0.055 250);   /* dusty blue  */
+  --pastel-b: oklch(78% 0.035  60);   /* warm greige */
+  --pastel-c: oklch(70% 0.075  30);   /* muted rose  */
+
+  /* Derived, not hand-picked: the wash is the rose pole diluted into
+     the background, so it stays in the family if a pole changes. */
+  --tint:  color-mix(in oklab, var(--pastel-c) 5%, var(--bg));
+  --focus: oklch(48% 0.13 250);       /* the blue pole, deep enough
+                                         to carry a focus ring */
+
+  --maxw:      52rem;
+  /* The tile grid breaks out of the reading measure. */
+  --maxw-wide: 70rem;
+  --gutter:   clamp(1.25rem, 5vw, 2.5rem);
+  --block:    clamp(3rem, 7vw, 5rem);
+
+  /* All three self-hosted; the rest of each stack is only a fallback
+     for the moment before the webfont lands. */
+  --font-serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Palatino,
+                Georgia, "Times New Roman", serif;
+  --font-sans: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Source Code Pro", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* Dark mode is maintained, not designed — the light scheme is the
+   one that's art-directed. Poles keep their hue, gain a little
+   lightness; --tint derives itself from the new background. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:       oklch(15% 0 0);
+    --line:     oklch(27% 0 0);
+    --line-str: oklch(36% 0 0);
+
+    --text:     oklch(93% 0 0);
+    --muted:    oklch(72% 0 0);
+    --faint:    oklch(54% 0 0);
+
+    --pastel-a: oklch(75% 0.055 250);
+    --pastel-b: oklch(82% 0.035  60);
+    --pastel-c: oklch(75% 0.075  30);
+
+    --tint:  color-mix(in oklab, var(--pastel-c) 7%, var(--bg));
+    --focus: oklch(75% 0.055 250);
+  }
+}
+
+/* ── Page transitions ───────────────────────────────────── */
+/* Cross-document view transitions: navigating between the four
+   pages cross-fades instead of flashing white. Four lines, no
+   script, and browsers without support simply navigate normally.
+   Kept short and fade-only — nothing slides or moves. */
+@view-transition { navigation: auto; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.18s;
+  animation-timing-function: ease;
+}
+
+/* ── Base ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 6rem;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  /* Real weights and a real italic exist — never let the browser
+     fake either. */
+  font-synthesis: none;
+}
+
+/* Grain. One static layer, no colour of its own — takes the plastic
+   edge off flat white without anything moving. Delete this rule to
+   remove the texture entirely; drop the opacity to make it whisper. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  background-size: 200px 200px;
+}
+
+h1, h2, h3 {
+  margin: 0 0 0.5em;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+  /* Even line lengths in headings instead of a one-word last line. */
+  text-wrap: balance;
+}
+
+/* No orphans, no ragged last lines. */
+p, li, figcaption, .tile-lede, .era-note, .index-desc { text-wrap: pretty; }
+h1 { font-size: clamp(2rem, 4.8vw, 2.9rem); line-height: 1.16; }
+h2 { font-size: clamp(1.35rem, 2.6vw, 1.6rem); }
+h3 { font-size: 1.1rem; }
+
+p { margin: 0 0 1.1rem; }
+a { color: inherit; text-decoration: none; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+strong { font-weight: 600; }
+em { font-style: italic; }
+
+svg {
+  width: 1em; height: 1em; fill: none; stroke: currentColor;
+  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.65rem 1rem;
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 600;
+}
+.skip-link:focus { left: 0; }
+
+/* Keeps tokens like C++ from breaking across a line. */
+.nowrap { white-space: nowrap; }
+
+/* Small uppercase mono label — the one recurring typographic motif. */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+/* The rule on top is the dusty blue pole — the same tone as the
+   "On the desk" era marker. It sits on the sticky header, so the
+   colour never leaves the viewport. A pseudo-element rather than a
+   border, so the hairline underneath stays neutral grey. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding-top: 4px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.site-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--pastel-a);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.75rem;
+}
+
+.brand {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+}
+.brand span { color: var(--faint); }
+
+.nav-list { display: flex; align-items: center; gap: 1.25rem; }
+.nav-list a {
+  display: block;
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  border-bottom: 1px solid transparent;
+}
+.nav-list a:hover { color: var(--text); }
+.nav-list a[aria-current="page"] {
+  color: var(--text);
+  border-bottom-color: var(--text);
+}
+
+/* ── Page head ──────────────────────────────────────────── */
+.page-head {
+  padding-block: var(--block) clamp(2rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--line);
+}
+.page-head .label { display: block; margin-bottom: 1rem; }
+.page-head h1 { max-width: 20ch; }
+.page-head p {
+  margin: 0;
+  max-width: 58ch;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.75;
+}
+
+/* ── Generic content block ──────────────────────────────── */
+.block { padding-block: var(--block); }
+.block + .block { border-top: 1px solid var(--line); }
+
+.prose { max-width: 60ch; }
+.prose p { color: var(--muted); line-height: 1.8; }
+.prose em { color: var(--text); }
+/* Opening paragraph sets the tone — slightly larger, in the serif. */
+.prose > p:first-child {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* Two-column row: mono label on the left, content on the right.
+   The layout primitive the whole site is built from. */
+.row {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 0.5rem 2rem;
+  padding-block: 1.6rem;
+  border-top: 1px solid var(--line);
+}
+.row:last-child { border-bottom: 1px solid var(--line); }
+.row-head { padding-top: 0.15rem; }
+
+/* ── Home ───────────────────────────────────────────────── */
+.hero { padding-block: clamp(3.5rem, 9vw, 6rem) var(--block); }
+.hero .label { display: block; margin-bottom: 1.25rem; }
+.hero h1 {
+  font-size: clamp(2.2rem, 5.6vw, 3.4rem);
+  max-width: 16ch;
+  margin-bottom: 1.6rem;
+}
+.hero p {
+  max-width: 56ch;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.hero-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--text);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.btn:hover { background: var(--text); color: var(--bg); }
+.btn-quiet { border-color: var(--line-str); color: var(--muted); }
+.btn-quiet:hover { background: transparent; border-color: var(--text); color: var(--text); }
+
+/* Flat stat strip — hairlines only, no boxes. */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+.stats-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.stats > div {
+  padding: 1.4rem 1.25rem 1.4rem 0;
+  border-right: 1px solid var(--line);
+}
+.stats > div:last-child { border-right: 0; }
+.stats > div:not(:first-child) { padding-left: 1.25rem; }
+.stats dt {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.stats dd {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Index of subpages, on the home page. */
+.index-list a {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr) auto;
+  gap: 0.35rem 2rem;
+  align-items: baseline;
+  padding-block: 1.35rem;
+  border-top: 1px solid var(--line);
+}
+.index-list li:last-child a { border-bottom: 1px solid var(--line); }
+.index-list a:hover { color: var(--text); }
+.index-list a:hover .index-desc { color: var(--text); }
+.index-title { font-family: var(--font-serif); font-size: 1.28rem; }
+.index-desc { grid-column: 2; color: var(--muted); font-size: 0.94rem; }
+.index-arrow { color: var(--faint); }
+.index-list a:hover .index-arrow { color: var(--text); }
+
+/* ── About ──────────────────────────────────────────────── */
+/* Prose left, portrait right. The bio breaks out of the reading
+   measure so the photo can be large without squeezing the text.
+   The figure comes FIRST in the markup and is placed into column 2 —
+   so when the grid collapses, the photo lands above the bio with no
+   reordering, and the source order still reads sensibly. */
+.about-wrap {
+  width: 100%;
+  max-width: 68rem;        /* two equal columns; the portrait's display
+                              crop (below) matches its height to the bio */
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+/* Equal columns: text and photograph are the same width, and they
+   scale together as the viewport narrows. */
+.about {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 3.25rem);
+  align-items: start;
+}
+.about .prose {
+  grid-column: 1;
+  grid-row: 1;
+  max-width: none;         /* fill the column, or the widths won't
+                              actually match */
+}
+.portrait { grid-column: 2; grid-row: 1; }
+
+/* No frame, no mat, no shadow — just the photograph. */
+.portrait { margin: 0; }
+.portrait picture { display: block; }
+.portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 10;    /* slightly shorter than the 4:5 source so the
+                              column height matches the bio text */
+  object-fit: cover;
+  object-position: 50% 30%;  /* bias the crop toward the face */
+}
+.portrait figcaption {
+  display: block;
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+  color: var(--faint);
+}
+
+/* The bio sits at the wide measure, so the section below needs its
+   own rule at the normal one. */
+.block--ruled { border-top: 1px solid var(--line); }
+
+.skill-value {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.skill-value li { display: inline; }
+.skill-value li:not(:last-child)::after {
+  content: " · ";
+  color: var(--faint);
+}
+
+/* ── Small entry heading (about page) ───────────────────── */
+.entry-title { margin: 0 0 0.2rem; font-size: 1.28rem; }
+.entry-title a {
+  border-bottom: 1px solid var(--line-str);
+  transition: border-color 0.18s;
+}
+.entry-title a:hover { border-bottom-color: var(--text); }
+.entry-org { display: block; font-family: var(--font-sans); color: var(--muted); font-size: 0.95rem; }
+
+.stack {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--faint);
+  line-height: 1.9;
+}
+.stack li { display: inline; }
+.stack li:not(:last-child)::after { content: " / "; }
+
+/* ── Era band ───────────────────────────────────────────── */
+/* Eleven years as a proportional bar: column widths are the
+   actual durations, so the shape of the career is the graphic. */
+/* Three kinds of work, given equal weight — none of them is the
+   sideline. (This band previously encoded durations proportionally;
+   if you reintroduce dates, 6fr / minmax(7.5rem, 1fr) / 4fr is the
+   proportional version, with a floor so the short one stays legible.) */
+.era {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.era > a {
+  display: block;
+  padding: 1rem 1rem 1.1rem;
+  background: var(--bg);
+  color: inherit;
+  text-decoration: none;
+}
+.era > a:hover { background: var(--tint); }
+/* One pastel per era — the family used as a legend. */
+.era-rule {
+  display: block;
+  height: 4px;
+  margin-bottom: 0.9rem;
+  background: var(--pastel-a);
+}
+.era > a:nth-child(2) .era-rule { background: var(--pastel-b); }
+.era > a:nth-child(3) .era-rule { background: var(--pastel-c); }
+.era-years {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--faint);
+  white-space: nowrap;     /* a date range never breaks mid-range */
+}
+.era-name {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+.era-note {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ── Tile grid ──────────────────────────────────────────── */
+/* Each case is a tile in a hairline grid: the 1px gaps are the
+   parent's background showing through, so the rules never double
+   up. Tiles are <details> — clicking one expands the full write-up
+   in place, natively, with no script. */
+.tiles-wrap {
+  width: 100%;
+  max-width: var(--maxw-wide);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+/* Group headings. The three names match the three strands in the band
+   above, so the band reads as a legend for what follows. */
+.tiles-head { display: block; margin: 0 0 1rem; font-weight: 400; scroll-margin-top: 5rem; }
+.tiles + .tiles-head { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+/* One tile per row. The 1px gaps are the parent's background
+   showing through, so rules never double up. */
+.tiles {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+/* The tile responds to its own width, not the viewport's — so the
+   component stays correct wherever it's placed. */
+.tile {
+  container: tile / inline-size;
+  background: var(--bg);
+}
+.tile[open] { background: var(--tint); }
+
+/* Full-width row: image on the left, face on the right.
+   list-style/marker rules kill the default disclosure triangle. */
+.tile summary {
+  display: grid;
+  grid-template-columns: 20rem minmax(0, 1fr);
+  align-items: stretch;
+  cursor: pointer;
+  list-style: none;
+}
+.tile summary::-webkit-details-marker { display: none; }
+.tile summary:focus-visible { outline-offset: -3px; }
+
+.tile-face {
+  display: block;
+  padding: 1.6rem 1.75rem 1.7rem;
+  transition: background-color 0.18s;
+}
+.tile summary:hover .tile-face { background: var(--tint); }
+.tile[open] summary:hover .tile-face { background: transparent; }
+
+/* Each tile carries an image of its own subject. Two layers: the
+   photograph in img/, and the hand-drawn SVG in art/ beneath it.
+   A background layer that fails to load simply doesn't paint, so
+   deleting or renaming a photo drops cleanly back to the drawing —
+   which is also what happens while better photography is pending. */
+.tile-art {
+  display: block;
+  min-height: 12.5rem;
+  background-color: var(--tint);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-right: 1px solid var(--line);
+  transition: opacity 0.25s;
+}
+.tile summary:hover .tile-art { opacity: 0.92; }
+@media (prefers-color-scheme: dark) {
+  .tile-art { opacity: 0.88; }
+  .tile summary:hover .tile-art { opacity: 1; }
+}
+
+/* Two declarations each. The first is the JPEG baseline; the second
+   offers AVIF and WebP via image-set() and is ignored wholesale by
+   browsers that don't support it. AVIF runs ~⅓ the JPEG weight. */
+
+.tile-art--routing {
+  background-image: url("img/routing.jpg"), url("art/routing.svg");
+  background-image:
+    image-set(url("img/routing.avif") type("image/avif"),
+              url("img/routing.webp") type("image/webp"),
+              url("img/routing.jpg")  type("image/jpeg")),
+    url("art/routing.svg");
+}
+.tile-art--venues {
+  background-image: url("img/venues.jpg"), url("art/venues.svg");
+  background-image:
+    image-set(url("img/venues.avif") type("image/avif"),
+              url("img/venues.webp") type("image/webp"),
+              url("img/venues.jpg")  type("image/jpeg")),
+    url("art/venues.svg");
+}
+.tile-art--allocation {
+  background-image: url("img/allocation.jpg"), url("art/allocation.svg");
+  background-image:
+    image-set(url("img/allocation.avif") type("image/avif"),
+              url("img/allocation.webp") type("image/webp"),
+              url("img/allocation.jpg")  type("image/jpeg")),
+    url("art/allocation.svg");
+}
+
+.tile-art--grant {
+  background-image: url("img/grant.jpg"), url("art/grant.svg");
+  background-image:
+    image-set(url("img/grant.avif") type("image/avif"),
+              url("img/grant.webp") type("image/webp"),
+              url("img/grant.jpg")  type("image/jpeg")),
+    url("art/grant.svg");
+}
+
+.tile-art--paper {
+  background-image: url("img/paper.jpg"), url("art/paper.svg");
+  background-image:
+    image-set(url("img/paper.avif") type("image/avif"),
+              url("img/paper.webp") type("image/webp"),
+              url("img/paper.jpg")  type("image/jpeg")),
+    url("art/paper.svg");
+}
+
+.tile-art--spread {
+  background-image: url("img/spread.jpg"), url("art/spread.svg");
+  background-image:
+    image-set(url("img/spread.avif") type("image/avif"),
+              url("img/spread.webp") type("image/webp"),
+              url("img/spread.jpg")  type("image/jpeg")),
+    url("art/spread.svg");
+}
+
+.tile-art--dashboard {
+  background-image: url("img/dashboard.jpg"), url("art/dashboard.svg");
+  background-image:
+    image-set(url("img/dashboard.avif") type("image/avif"),
+              url("img/dashboard.webp") type("image/webp"),
+              url("img/dashboard.jpg")  type("image/jpeg")),
+    url("art/dashboard.svg");
+}
+
+.tile-art--backtest {
+  background-image: url("img/backtest.jpg"), url("art/backtest.svg");
+  background-image:
+    image-set(url("img/backtest.avif") type("image/avif"),
+              url("img/backtest.webp") type("image/webp"),
+              url("img/backtest.jpg")  type("image/jpeg")),
+    url("art/backtest.svg");
+}
+
+.tile-art--tree {
+  background-image: url("img/tree.jpg"), url("art/tree.svg");
+  background-image:
+    image-set(url("img/tree.avif") type("image/avif"),
+              url("img/tree.webp") type("image/webp"),
+              url("img/tree.jpg")  type("image/jpeg")),
+    url("art/tree.svg");
+}
+
+/* ── Tile: narrow container ─────────────────────────────── */
+/* Was a viewport media query; now keyed to the tile itself. */
+@container tile (max-width: 42rem) {
+  .tile summary { grid-template-columns: minmax(0, 1fr); }
+  .tile-art {
+    min-height: 0;
+    height: 7.5rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .tile-face { padding: 1.4rem 1.5rem 1.5rem; }
+  .tile-body { margin-left: 0; padding: 0 1.5rem 1.6rem; }
+}
+
+.tile-meta { display: block; }
+.tile-title {
+  display: block;
+  margin-top: 0.45rem;
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  line-height: 1.28;
+}
+/* Technical descriptor, directly under the title. Deliberately not
+   another mono uppercase line — it changes family, case, size and
+   weight all at once, so it can't be mistaken for the meta line
+   above. Sans at full text colour and semibold: second in the
+   hierarchy after the title, ahead of the description. */
+.tile-subtitle {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.98rem;
+  font-weight: 450;        /* variable axis: a hair above regular, no bold */
+  color: var(--text);
+}
+
+/* Description and toggle share a line. */
+.tile-lede-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.75rem;
+  margin-top: 0.85rem;
+}
+.tile-lede {
+  display: block;
+  max-width: 58ch;         /* the row is wider than a comfortable line */
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* Open/close affordance: the chevron alone, no label. <details>
+   already conveys the state to assistive tech, so it stays
+   aria-hidden. */
+.tile-cue {
+  display: block;
+  flex: none;
+}
+
+/* Chevron drawn from two borders on a rotated square rather than set
+   as a glyph: a caret this small has to be crisp, and ˄ / ˅ aren't in
+   the font subset anyway. Points down to open, up to close. No
+   transition — the mark should change, not animate. */
+.tile-cue::after {
+  content: "";
+  display: block;
+  width: 0.62rem;          /* standing alone now, so a touch larger */
+  height: 0.62rem;
+  border-right: 1.5px solid var(--faint);
+  border-bottom: 1.5px solid var(--faint);
+  transform: translateY(-0.2rem) rotate(45deg);
+}
+.tile[open] .tile-cue::after {
+  transform: translateY(0.14rem) rotate(-135deg);
+}
+.tile summary:hover .tile-cue::after {
+  border-right-color: var(--text);
+  border-bottom-color: var(--text);
+}
+.tile summary:hover .tile-cue { color: var(--text); }
+
+/* The body runs the full width beneath the face, indented to line
+   up with it rather than with the image. */
+.tile-body {
+  padding: 0 1.75rem 1.7rem;
+  margin-left: 20rem;
+  animation: tile-in 0.28s ease both;
+}
+.tile-body p {
+  max-width: 64ch;
+  margin: 0 0 0.9rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+.tile-body p:first-of-type { color: var(--text); }
+.tile-body em { color: var(--text); }
+.tile-body .stack { display: block; margin-top: 1.1rem; }
+
+/* Deep links. Each tile body carries an id, so work.html#genealograph
+   opens that tile and scrolls to it — browsers expand a closed
+   <details> when a fragment targets something inside it. Verified in
+   Firefox and Chromium; the id must be on the content, not on the
+   <details> or the <summary>, neither of which triggers it.
+   The offset clears the sticky header and the tile's own face, so the
+   title is on screen and not just the paragraphs.
+   Nothing on the page advertises these — the URLs are for sending, not
+   for browsing. The slugs are listed in the README. */
+.tile-body { scroll-margin-top: 19rem; }
+
+/* Outbound links inside an open tile — repo, paper, demo. Set well
+   clear of the keyword list above so the two don't read as one block. */
+/* `.tile-body p` sets margin: 0, and beats a bare `.tile-links` on
+   specificity — so this selector has to match it. */
+.tile-body .tile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.5rem;
+  margin: 2.5rem 0 0;
+}
+.tile-links a {
+  font-size: 0.9rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--line-str);
+  padding-bottom: 2px;
+  transition: border-color 0.18s;
+}
+.tile-links a:hover { border-bottom-color: var(--text); }
+.tile-links a::after {
+  content: "↗";
+  margin-left: 0.35em;
+  color: var(--faint);
+}
+
+@keyframes tile-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Outcome band — the numbers get the display type, not a bullet. */
+.figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2rem;
+  margin: 1.4rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+.figure-value {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.was   { color: var(--faint); font-size: 0.62em; }
+.arrow { color: var(--faint); font-size: 0.62em; padding: 0 0.15em; }
+.figure-cap { display: block; margin-top: 0.4rem; }
+
+/* ── Contact ────────────────────────────────────────────── */
+.contact-value {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  word-break: break-word;
+}
+.contact-value a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.contact-note { display: block; margin-top: 0.2rem; color: var(--faint); font-size: 0.85rem; }
+
+/* ── Contact form ───────────────────────────────────────── */
+/* Posts to FormSubmit (the one deliberate external request on the
+   site, and only when the visitor submits). Spam defence is a
+   honeypot field plus FormSubmit's captcha page — no JavaScript. */
+.contact-form {
+  max-width: 40rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem 1.5rem;
+}
+.field { display: flex; flex-direction: column; gap: 0.45rem; }
+.field--full { grid-column: 1 / -1; }
+.field label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.field input,
+.field textarea {
+  border: 1px solid var(--line-str);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0;          /* flat, like everything else */
+}
+.field textarea { resize: vertical; min-height: 9rem; }
+.field input:focus,
+.field textarea:focus {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+  border-color: var(--focus);
+}
+.contact-form .btn {
+  justify-self: start;
+  cursor: pointer;
+  background: transparent;
+}
+.contact-form .btn:hover { background: var(--text); color: var(--bg); }
+
+/* Honeypot: parked off-canvas, not display:none — some bots skip
+   fields they can see are hidden. Humans never meet it. */
+.hp-field {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .contact-form { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+.site-footer {
+  padding-block: 2rem;
+  margin-top: var(--block);
+  border-top: 1px solid var(--line);
+  background: var(--tint);
+}
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.85rem;
+  color: var(--faint);
+}
+.footer-inner p { margin: 0; }
+.footer-nav { display: flex; flex-wrap: wrap; gap: 1.1rem; }
+.footer-nav a:hover { color: var(--text); }
+
+/* ── Responsive ─────────────────────────────────────────── */
+/* The about columns are 1fr each, so they shrink together on their
+   own — no intermediate step needed before the stack at 760px. */
+
+@media (max-width: 760px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.15rem;
+    padding-block: 0.7rem 0.5rem;
+  }
+  /* The menu bar stays a menu bar at every width — it just wraps.
+     No hamburger, so every destination is always visible and no
+     toggle script is needed. */
+  .nav-list {
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    padding-bottom: 0.2rem;
+  }
+
+  /* Portrait moves above the bio at the full column width, and the
+     crop goes wider so a big photo doesn't push the first sentence
+     off the screen. */
+  .about { grid-template-columns: minmax(0, 1fr); gap: 1.75rem; }
+  .portrait { grid-column: 1; grid-row: 1; }
+  .portrait img { aspect-ratio: 5 / 4; }
+  .about .prose { grid-column: 1; grid-row: 2; }
+
+  .row,
+  .index-list a { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  .index-desc { grid-column: 1; }
+  .index-arrow { display: none; }
+
+  /* Tile stacking now lives in a @container query, above. */
+  .figures { gap: 1.1rem 1.75rem; }
+
+  /* Proportional widths stop being legible on a phone. */
+  .era { grid-template-columns: minmax(0, 1fr); }
+
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stats > div {
+    padding: 1.1rem 1rem 1.1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .stats > div:nth-child(2n) { border-right: 0; padding-left: 1rem; }
+  .stats > div:nth-child(2n+1) { padding-left: 0; }
+  .stats > div:nth-last-child(-n+2) { border-bottom: 0; }
+}
+
+/* ── Motion ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  /* Page transitions off too, not just shortened. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
+
+/* ── Print ──────────────────────────────────────────────── */
+@media print {
+  .site-header, .hero-links, .site-footer, .tile-art, .tile-cue,
+  body::after { display: none; }
+  body { background: #fff; color: #000; }
+  .block, .page-head { padding-block: 1.25rem; break-inside: avoid; }
+  .tile-body { margin-left: 0; }
+  .tile summary { grid-template-columns: minmax(0, 1fr); }
+  /* Closed tiles print closed. Browsers hide <details> content with
+     content-visibility, not display, so `display: block` does nothing
+     here — tested, it doesn't work. ::details-content reaches it where
+     supported (Chromium); elsewhere, open the tiles before printing. */
+  .tile::details-content { content-visibility: visible; }
+  .tile { break-inside: avoid; }
+}

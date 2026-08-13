@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Work — Alexander Aigner</title>
+  <meta name="description" content="Selected work: a portfolio management system, portfolio optimization and rebalancing, an arbitrage bot, backtesting, monitoring, a funded research proposal and a published paper.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="canonical" href="https://alexander-aigner.eu/work.html">
+  <link rel="preload" href="fonts/newsreader-roman.woff2" as="font"
+        type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/source-sans-3-roman.woff2" as="font"
+        type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%237e9dc0'/><rect y='16' width='32' height='16' fill='%23c4867f'/></svg>">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">Alexander Aigner <span>— Quantitative Engineer</span></a>
+      <nav class="nav" aria-label="Primary">
+        <ul class="nav-list">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="work.html" aria-current="page">Work</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <header class="page-head">
+        <span class="label">Work</span>
+        <h1>Decision logic, and the systems that run it</h1>
+        <p>Most of what I build turns a method — an allocation, a rebalancing rule, an execution decision — into code that runs in production and can be checked afterwards. Open any tile for the detail.</p>
+      </header>
+
+      <section class="block" aria-label="Kinds of work">
+        <div class="era">
+          <a href="#report-publishing">
+            <span class="era-rule" aria-hidden="true"></span>
+            <span class="era-name">Report &amp; Publishing</span>
+            <span class="era-note">A co-authored paper, the analytics investors read, and monitoring of what actually happened.</span>
+          </a>
+          <a href="#implementation">
+            <span class="era-rule" aria-hidden="true"></span>
+            <span class="era-name">Implementation</span>
+            <span class="era-note">Rebalancing execution, the platform beneath it, venue integrations, a desktop application.</span>
+          </a>
+          <a href="#research">
+            <span class="era-rule" aria-hidden="true"></span>
+            <span class="era-name">Research</span>
+            <span class="era-note">Black–Litterman construction, backtesting, a funded proposal.</span>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <div class="tiles-wrap">
+
+      <h2 class="label tiles-head" id="report-publishing">Report &amp; Publishing</h2>
+      <div class="tiles">
+
+        <details class="tile">
+          <summary>
+            <span class="tile-art tile-art--paper" aria-hidden="true"></span>
+            <span class="tile-face">
+              <span class="label tile-meta">Dec 2025 · CVA Research Journal</span>
+              <span class="tile-title">A Multi-Factor Investment Framework for Crypto Asset Management</span>
+              <span class="tile-subtitle">Co-Author · Portfolio Construction and Rebalancing Execution</span>
+              <span class="tile-lede-row">
+                <span class="tile-lede">An end-to-end investment process for digital assets, from defining the universe to executing the rebalance.</span>
+                <span class="tile-cue" aria-hidden="true"></span>
+              </span>
+            </span>
+          </summary>
+          <div class="tile-body" id="paper">
+            <p>
+              A documented, replicable investment process is what separates disciplined investing
+              from opportunistic speculation — and what an institution can actually be held to.
+              The paper sets one out end to end: what a digital asset portfolio should hold, and how you
+              actually get there. It specifies the whole process — defining the
+              investable universe through screening criteria, integrating fundamental,
+              quantitative, technical and sentiment-based signals into a Black–Litterman
+              construction engine, and turning the resulting weights into executed trades.
+              Published in the CVA Research Journal on 17 December 2025, with Dominik
+              Stiftinger-Lang, Jérôme Benathan and Hugo Doering.
+            </p>
+            <p>
+              I wrote two of its chapters. Portfolio construction covers the data layer — market
+              capitalization and liquidity, price and volume series, protocol analytics, sentiment
+              indices — and how those heterogeneous inputs become views with associated
+              uncertainty in a Black–Litterman posterior. The engine underneath is my
+              implementation: the base Black–Litterman model and the feeding of its posterior
+              returns into the robust optimizer, with the partner's signals and the choice of
+              views adapted for the paper. Rebalancing execution formalizes what a
+              reallocation costs, shows why routing every position through one common asset is
+              suboptimal where assets are quoted directly against each other, develops the
+              shortest-path formulation and its practical limits, and reports the simulation
+              study of 100 reallocations per portfolio size, from four to sixteen assets over a
+              24-asset investable universe — simulations run with the cost-optimal rebalancing
+              engine described below, which the chapter documents rather than re-implements. In the framework's backtest — weekly rebalancing,
+              January 2021 to September 2025 — the fee-adjusted Black–Litterman strategy earned
+              an annualized return of 77%, 21 percentage points a year above the CCI30
+              index, with beta below one and the shallowest maximum drawdown of the twelve
+              strategies compared. The framework is deliberately modular: each stage can be
+              lifted out and used on its own, or as a building block for a product.
+            </p>
+
+            <div class="figures">
+              <div>
+                <span class="figure-value">Best Paper</span>
+                <span class="label figure-cap">award · on-stage talk</span>
+              </div>
+              <div>
+                <span class="figure-value">2</span>
+                <span class="label figure-cap">chapters written</span>
+              </div>
+              <div>
+                <span class="figure-value">77%</span>
+                <span class="label figure-cap">annualized after-fee return in the backtest</span>
+              </div>
+              <div>
+                <span class="figure-value">+21 pp</span>
+                <span class="label figure-cap">annual outperformance of the CCI30 index</span>
+              </div>
+            </div>
+            <ul class="stack"><li>Black–Litterman</li><li>Portfolio Construction</li><li>Rebalancing Execution</li><li>Technical Writing</li></ul>
+            <p class="tile-links">
+              <a href="docs/multi-factor-investment-framework-crypto-asset-management.pdf">Read the paper (PDF, 32 pages)</a>
+            </p>
+          </div>
+        </details>
+
+        <details class="tile">
+          <summary>
+            <span class="tile-art tile-art--dashboard" aria-hidden="true"></span>
+            <span class="tile-face">
+              <span class="label tile-meta">2024 — 2026 · Commercial project</span>
+              <span class="tile-title">Performance and Risk Analytics</span>
+              <span class="tile-subtitle">Go · Python · PostgreSQL</span>
+              <span class="tile-lede-row">
+                <span class="tile-lede">The return, risk and benchmark figures a portfolio is judged on, computed to withstand scrutiny.</span>
+                <span class="tile-cue" aria-hidden="true"></span>
+              </span>
+            </span>
+          </summary>
+          <div class="tile-body" id="performance-analytics">
+            <p>
+              Investors decide whether to stay invested on the strength of a handful of numbers,
+              and those numbers have to survive being questioned by someone who did not compute
+              them. Every one of them depends on choices that are invisible in the result. I built
+              the analytics layer that turns transaction and price history into those figures:
+              annualized and time-weighted returns, volatility, variance and semivariance,
+              downside deviation, Sharpe and related risk-adjusted ratios, maximum and average
+              drawdown, and performance against a market index benchmark whose constituent set is
+              configurable.
+            </p>
+            <p>
+              The substance is in the definitions. Metrics are derived from relative daily
+              returns rather than absolute portfolio values, so deposits and withdrawals don't
+              distort them; day boundaries are fixed in UTC so accounts in different time zones
+              aggregate consistently; and cash flows arriving without a record — staking rewards,
+              airdrops, internal transfers — are attributed explicitly, since otherwise they
+              register as phantom returns. Beneath sits the query layer that aggregates positions,
+              transactions and prices out of Postgres into daily series, indexed so a chart can be
+              redrawn on request rather than precomputed nightly, and the chart series and summary
+              table are generated from the same source — two code paths producing nearly equal
+              numbers is a support problem. The library exists twice, in Go for production and
+              Python for research, with unit tests serving as the specification.
+            </p>
+
+            <div class="figures">
+              <div>
+                <span class="figure-value">33</span>
+                <span class="label figure-cap">metrics in production</span>
+              </div>
+              <div>
+                <span class="figure-value">2</span>
+                <span class="label figure-cap">implementations, Go and Python</span>
+              </div>
+            </div>
+            <ul class="stack"><li>Go</li><li>Python</li><li>PostgreSQL</li><li>Pandas</li><li>NumPy</li></ul>
+          </div>
+        </details>
+
+        <details class="tile">
+          <summary>
+            <span class="tile-art tile-art--spread" aria-hidden="true"></span>
+            <span class="tile-face">
+              <span class="label tile-meta">2023 — Present · Commercial project</span>
+              <span class="tile-title">Trading Monitoring and Reporting</span>
+              <span class="tile-subtitle">Grafana · PostgreSQL · Automated Reports</span>
+              <span class="tile-lede-row">
+                <span class="tile-lede">Dashboards and reports over live trade activity, built around the failure modes that actually occur.</span>
+                <span class="tile-cue" aria-hidden="true"></span>
+              </span>
+            </span>
+          </summary>
+          <div class="tile-body" id="monitoring">
+            <p>
+              An automated trading system is only as trustworthy as the evidence that it is
+              working. I built the monitoring and reporting layer that provides it: dashboards
+              over time-series metrics and aggregated logs for the live view, generated reports
+              for the record. The two answer different questions — whether the system is behaving
+              right now, versus what it did over a period, in a form that can be filed and
+              compared.
+            </p>
+            <p>
+              For the arbitrage strategy the panels followed the money rather than the machine:
+              cumulative quote profit and traded volume per pair, transfer volumes and fees
+              between venues in a common quote currency, relative
+              transfer fees per asset over time, and a table of total transfer cost — number of
+              transfers, absolute volume, absolute and relative cost — per asset. Transfer cost is
+              what quietly decides whether an arbitrage strategy is profitable, so it earned as
+              much dashboard space as the profit itself. The bot underneath was one I also
+              maintained and extended: incremental work on the execution path, partial fills and
+              venue error semantics, converting silent failures into explicit ones.
+            </p>
+
+            <div class="figures">
+              <div>
+                <span class="figure-value">9</span>
+                <span class="label figure-cap">dashboards in daily use</span>
+              </div>
+            </div>
+            <ul class="stack"><li>Grafana</li><li>Loki</li><li>PostgreSQL</li><li>TimescaleDB</li><li>Time-Series Data</li><li>Automated Reporting</li></ul>
+          </div>
+        </details>
+
+      </div>
+
+      <h2 class="label tiles-head" id="implementation">Implementation</h2>
+      <div class="tiles">
+
+        <details class="tile">
+          <summary>
+            <span class="tile-art tile-art--venues" aria-hidden="true"></span>
+            <span class="tile-face">
+              <span class="label tile-meta">2024 — Present · Commercial project</span>
+              <span class="tile-title">Exchange Venue Integrations</span>
+              <span class="tile-subtitle">Go · REST &amp; WebSocket · Spot and derivatives</span>
+              <span class="tile-lede-row">
+                <span class="tile-lede">Connecting the platform to a new exchange, so that nothing above it has to know which exchange it is trading on.</span>
+                <span class="tile-cue" aria-hidden="true"></span>
+              </span>
+            </span>
+          </summary>
+          <div class="tile-body" id="venue-integration">
+            <p>
+              Each venue added is more liquidity to trade against, better prices to route
+              through, and another market clients can hold assets on — without a single change to
+              the logic above. Every exchange offers the same idea, place an order and hold a
+              balance, through a different interface with its own names, rules and rounding, and I
+              own the adapters that hide those differences. Bringing up a venue means mapping its instrument and symbol
+              scheme, precision and lot-size rules, fee schedule and fee currency, account modes,
+              order types and time-in-force semantics, and its balance model onto the internal
+              interface the rest of the platform is written against, so routing, rebalancing and
+              reporting stay venue-agnostic.
+            </p>
+            <p>
+              Market data is the other half: subscribing to order-book and user-data streams,
+              verifying sequence continuity and resynchronizing after a gap, falling back to REST
+              for history, and staying inside per-endpoint rate limits. Order state is reconciled
+              continuously rather than assumed, because a venue and a client eventually disagree.
+              Most of the difficulty is in discrepancies that only surface under real conditions —
+              reserved balances counted twice because frozen funds are reported differently,
+              position limits expressed in contracts where the platform reasons in notional, a
+              data channel gated behind a paid tier — so integrations are validated against the
+              live venue at small size before they are trusted with real allocations. Submission
+              is idempotent, because a retry that the venue already accepted is an unintended
+              second position. The most recent integration extended the platform beyond spot into
+              derivatives, adding margin providers and position-tier bounds.
+            </p>
+
+            <div class="figures">
+              <div>
+                <span class="figure-value">8</span>
+                <span class="label figure-cap">exchange venues integrated</span>
+              </div>
+              <div>
+                <span class="figure-value">3</span>
+                <span class="label figure-cap">market-data and on-chain sources</span>
+              </div>
+            </div>
+            <ul class="stack"><li>Go</li><li>REST &amp; WebSocket APIs</li><li>Concurrency</li><li>Reconciliation</li></ul>
+          </div>
+        </details>
+
+        <details class="tile">
+          <summary>
+            <span class="tile-art tile-art--routing" aria-hidden="true"></span>
+            <span class="tile-face">
+              <span class="label tile-meta">2023 — Present · Commercial project</span>
+              <span class="tile-title">Cost-Optimal Rebalancing Engine</span>
+              <span class="tile-subtitle">Go · Graph Algorithms · Shortest-Path Search</span>
+              <span class="tile-lede-row">
+                <span class="tile-lede">Getting a portfolio from what it holds today to what it should hold, at the lowest possible trading cost.</span>
+                <span class="tile-cue" aria-hidden="true"></span>
+              </span>
+            </span>
+          </summary>
+          <div class="tile-body" id="rebalancing-execution">
+            <p>
+              Every rebalance costs money in fees and spread, and that cost comes directly out of
+              return. This engine reduces it. The conventional approach sells every overweight
+              position into one common asset — a stablecoin, the digital equivalent of holding cash —
+              and buys the underweight ones back out of it. Each position then pays two spreads and two sets of
+              fees. In digital asset markets that intermediary isn't required: assets are quoted directly against
+              one another, and the cheapest path to a position being bought sometimes runs through
+              one being sold.
+            </p>
+            <p>
+              I built the engine that finds those paths. The tradable markets are modeled as a
+              directed graph — assets as nodes, trading pairs and inter-account transfer routes as
+              weighted edges, weights derived from the fee schedule and quoted spread, balances
+              valued against a common equivalent asset. A shortest-path search runs iteratively
+              over that graph until the target allocation is met, yielding an ordered sequence
+              rather than a set: orders must respect per-pair minimum sizes and
+              precision steps, and each leg depends on its predecessor having settled, so the
+              route has to be executable and not merely optimal. On top, the execution layer
+              applies slippage adjustment and measures fill quality against the price the route
+              was calculated at.
+            </p>
+            <p>
+              In simulation against the common-asset route, the method saved 9.4% of transaction
+              cost on a four-asset portfolio and 19.1% on a sixteen-asset one, and was cheaper in
+              99 of 100 runs at that size. Path length never exceeded four hops in simulation or
+              live execution, which bounds the slippage the extra legs can introduce. These
+              simulations are native to this project — the engine itself ran them — and they are
+              reported, together with the method, in the rebalancing-execution chapter of the
+              published paper above.
+            </p>
+
+            <div class="figures">
+              <div>
+                <span class="figure-value">19.1%</span>
+                <span class="label figure-cap">mean cost saving, 16 assets</span>
+              </div>
+              <div>
+                <span class="figure-value">99/100</span>
+                <span class="label figure-cap">runs cheaper than naive</span>
+              </div>
+              <div>
+                <span class="figure-value">≤ 4</span>
+                <span class="label figure-cap">hops per route</span>
+              </div>
+            </div>
+            <ul class="stack"><li>Go</li><li>Graph Algorithms</li><li>Dynamic Programming</li><li>Smart Order Routing</li></ul>
+          </div>
+        </details>
+
+        <details class="tile">
+          <summary>
+            <span class="tile-art tile-art--allocation" aria-hidden="true"></span>
+            <span class="tile-face">
+              <span class="label tile-meta">2023 — Present · Commercial project</span>
+              <span class="tile-title">Digital Asset Portfolio Management Platform</span>
+              <span class="tile-subtitle">Go · PostgreSQL · Docker</span>
+              <span class="tile-lede-row">
+                <span class="tile-lede">A newly founded company, no existing platform, and a requirement to manage real positions end to end.</span>
+                <span class="tile-cue" aria-hidden="true"></span>
+              </span>
+            </span>
+          </summary>
+          <div class="tile-body" id="portfolio-system">
+            <p>
+              The platform lets a firm manage client portfolios across several exchanges without
+              anyone moving positions by hand — allocation, execution and reporting in one system
+              rather than a spreadsheet and a set of exchange logins. Built as the company's
+              internal tool from 2023, it opened publicly in 2025 and has been developed most
+              intensively since — the busiest year of the codebase is the current one. As the company's
+              co-founder and CTO I have been one of the main engineers on it since the beginning,
+              working mostly on the decision logic — how a target allocation is derived, and how a
+              rebalance converts it into a concrete, ordered set of instructions — and on the data
+              model that logic reads from.
+            </p>
+            <p>
+              The platform has to know what is currently held, decide what should be held, and
+              carry out the change. Architecturally that is a set of Go services separated by
+              domain — account and order management, execution, scheduling, market-data import,
+              analytics, an API layer — over a single Postgres system of record. Two decisions
+              shape the rest. All venue-specific behavior sits behind an adapter interface, so
+              domain services never learn which exchange they are dealing with. And long-running
+              operations are modeled as durable workflows (Temporal) rather than request handlers: a
+              rebalance is dozens of dependent orders across accounts taking minutes, so each step
+              is idempotent and independently resumable, and a crash mid-sequence continues rather
+              than restarting into duplicate orders.
+            </p>
+            <p>
+              The database carries the same requirement. Positions, transactions, funds, fees and
+              derivative exposure are stored so any portfolio can be reconstructed as it stood at
+              any past moment, which makes the schema closer to an append-only history than to
+              current state — constraining migrations, which must evolve the model without
+              discarding history, and access, which is scoped per service role. The platform has
+              since grown from spot trading into derivatives, adding margin sizing, position tiers
+              and a second class of reconciliation problems.
+            </p>
+
+            <div class="figures">
+              <div>
+                <span class="figure-value">8</span>
+                <span class="label figure-cap">venues connected</span>
+              </div>
+              <div>
+                <span class="figure-value">3 yrs</span>
+                <span class="label figure-cap">continuously in production</span>
+              </div>
+            </div>
+            <ul class="stack"><li>Go</li><li>PostgreSQL</li><li>SQL</li><li>Docker</li><li>Temporal</li><li>HashiCorp Vault &amp; Consul</li></ul>
+          </div>
+        </details>
+
+        <details class="tile">
+          <summary>
+            <span class="tile-art tile-art--tree" aria-hidden="true"></span>
+            <span class="tile-face">
+              <span class="label tile-meta">2021 · Personal project · Open source</span>
+              <span class="tile-title">Genealograph — Family Tree Editor</span>
+              <span class="tile-subtitle"><span class="nowrap">C++</span> · Qt · CMake</span>
+              <span class="tile-lede-row">
+                <span class="tile-lede">A cross-platform desktop application for building, annotating and printing family trees.</span>
+                <span class="tile-cue" aria-hidden="true"></span>
+              </span>
+            </span>
+          </summary>
+          <div class="tile-body" id="genealograph">
+            <p>
+              Genealograph lets someone document a family as it actually is — including the
+              remarriages and step-relations most software refuses to represent — and print the
+              result. Trees are assembled on a worksheet: people are added as nodes,
+              connected through partnerships and lines of descent, annotated with biographical
+              detail, then laid out and printed. Documents are serialized and restored through a
+              dedicated I/O layer, and the interface ships with a German localization alongside
+              English.
+            </p>
+            <p>
+              The decision that determines the rest is not modeling a family as a tree. People,
+              partnerships and descent are separate object types with their own relations, so
+              remarriage, multiple partnerships and children across them are ordinary cases rather
+              than exceptions attached to a parent pointer. The editors follow from that
+              structure, and so does the layout, which has to place a graph rather than a strict
+              hierarchy. It is deliberately unmanaged: <span class="nowrap">C++</span> with CMake, no runtime hiding object
+              lifetime, building under both GCC and Clang.
+            </p>
+
+            <div class="figures">
+              <div>
+                <span class="figure-value">Cross-platform</span>
+                <span class="label figure-cap">builds on GCC and Clang</span>
+              </div>
+              <div>
+                <span class="figure-value">2</span>
+                <span class="label figure-cap">languages shipped (EN / DE)</span>
+              </div>
+            </div>
+            <ul class="stack"><li>C++</li><li>Qt</li><li>CMake</li><li>Qt Linguist</li></ul>
+            <p class="tile-links">
+              <a href="https://github.com/wolkensichel/Genealograph" rel="noopener">github.com/wolkensichel/Genealograph</a>
+            </p>
+          </div>
+        </details>
+
+      </div>
+
+      <h2 class="label tiles-head" id="research">Research</h2>
+      <div class="tiles">
+
+        <details class="tile">
+          <summary>
+            <span class="tile-art tile-art--grant" aria-hidden="true"></span>
+            <span class="tile-face">
+              <span class="label tile-meta">2025 — 2026 · FFG, Austria</span>
+              <span class="tile-title">FFG Research Grant</span>
+              <span class="tile-subtitle">Proposal · Architecture · Costing</span>
+              <span class="tile-lede-row">
+                <span class="tile-lede">National research funding secured for an end-to-end portfolio management system for digital assets.</span>
+                <span class="tile-cue" aria-hidden="true"></span>
+              </span>
+            </span>
+          </summary>
+          <div class="tile-body" id="ffg-funding">
+            <p>
+              Public research funding paid for a year of development that would otherwise have
+              had to be financed out of revenue — and, because the work had to be specified and
+              defended before an external committee, the architecture was argued before it was
+              written. I secured the grant from the FFG, Austria's national research promotion
+              agency, for an end-to-end portfolio management system for digital assets.
+            </p>
+            <p>
+              The project ran from April 2025 to June 2026 across five work packages: project
+              management; extending the architecture to derivatives and staking; a theoretical and
+              empirical analysis of risk-adaptive models for digital assets; dynamic portfolio
+              optimization built on that analysis; and optimized multi-order execution in
+              fragmented digital markets. Each carried its own deliverables and dated milestones,
+              with cost and effort estimated line by line and the risks that would prevent
+              delivery assessed up front. All five were delivered.
+            </p>
+
+            <div class="figures">
+              <div>
+                <span class="figure-value">5/5</span>
+                <span class="label figure-cap">work packages delivered</span>
+              </div>
+              <div>
+                <span class="figure-value">12</span>
+                <span class="label figure-cap">dated milestones</span>
+              </div>
+              <div>
+                <span class="figure-value">15 mo</span>
+                <span class="label figure-cap">project duration</span>
+              </div>
+            </div>
+            <ul class="stack"><li>Proposal Writing</li><li>System Architecture</li><li>Effort Estimation</li></ul>
+            <p class="tile-links">
+              <a href="https://projekte.ffg.at/projekt/2861463e-f36b-1410-863e-00d3c07d99bb" rel="noopener">View the project in the FFG database</a>
+            </p>
+          </div>
+        </details>
+
+        <details class="tile">
+          <summary>
+            <span class="tile-art tile-art--backtest" aria-hidden="true"></span>
+            <span class="tile-face">
+              <span class="label tile-meta">2021 — 2022 · Research</span>
+              <span class="tile-title">Black–Litterman Portfolio Construction</span>
+              <span class="tile-subtitle">Python · SciPy · Statsmodels · Scikit-learn</span>
+              <span class="tile-lede-row">
+                <span class="tile-lede">Turning an analyst's ranking of assets into portfolio weights, because a ranking is far easier to defend than a return forecast.</span>
+                <span class="tile-cue" aria-hidden="true"></span>
+              </span>
+            </span>
+          </summary>
+          <div class="tile-body" id="black-litterman">
+            <p>
+              This is how an analyst's judgement gets into a portfolio without anyone having to
+              invent a number. Classical mean–variance optimization in Markowitz's sense needs an
+              expected return for every asset, which nobody can supply honestly. Black–Litterman starts instead from what the market
+              already implies and adjusts it with the opinions you can defend. I implemented the
+              system in full, following Cela, Hafner, Mestel and Pferschy's formulation for
+              <em>ordinal</em> information: views stated as ordering relations among expected
+              returns rather than point forecasts, treated as stochastic, with the posterior
+              conditioned on those constraints and estimated by importance sampling.
+            </p>
+            <p>
+              Around it sits the machinery that makes it usable. The optimizer's inputs are
+              estimated robustly rather than taken as sample means: bootstrapped return paths
+              with Theil–Sen and Huber regressions fitted to log growth, trimmed means and
+              medians as cross-checks, and Student-t distributions fitted by maximum likelihood
+              to feed the simulation and importance-sampling steps. On top come the equilibrium
+              prior obtained by reverse optimization from market-capitalization weights, the view
+              and view-uncertainty matrices, efficient-frontier asset selection, and a robust
+              variant treating expected returns as lying within an uncertainty set — the plain
+              Markowitz optimizer staying in as the reference. Calibrating the robust variant was
+              curve- and parameter-fitting work of its own: measuring empirically how large the
+              uncertainty set can grow before the solution degenerates, then fitting a
+              distribution to the risk-seeking coefficient so its parameters could be derived
+              from a family of fitted functions rather than chosen by hand. The backtest harness
+              underneath measures against six baselines — buy and hold, uniform weights, minimum
+              variance, maximum Sharpe, mean-best and random rebalancing — over rolling windows
+              with bootstrapped return samples, and gives
+              more attention to lookahead, survivorship and optimistic cost assumptions than to
+              the optimizer itself. The construction engine of the published framework above
+              builds directly on this work: the base Black–Litterman model and the use of its
+              posterior returns inside the robust optimizer are this implementation, adapted for
+              the paper by taking the asset-management partner's signals as views.
+            </p>
+
+            <div class="figures">
+              <div>
+                <span class="figure-value">3</span>
+                <span class="label figure-cap">optimizers: mean–variance, Black–Litterman, robust</span>
+              </div>
+              <div>
+                <span class="figure-value">6</span>
+                <span class="label figure-cap">return estimators</span>
+              </div>
+              <div>
+                <span class="figure-value">6</span>
+                <span class="label figure-cap">baseline strategies</span>
+              </div>
+            </div>
+            <ul class="stack"><li>Python</li><li>NumPy</li><li>SciPy</li><li>Statsmodels</li><li>Scikit-learn</li><li>Jupyter</li></ul>
+            <p class="tile-links">
+              <a href="https://tugraz.elsevierpure.com/en/publications/mean-variance-portfolio-optimization-based-on-ordinal-information-2/" rel="noopener">The method it builds on</a>
+            </p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+
+    <div class="container">
+      <section class="block">
+        <div class="prose">
+          <p>
+            Commercial projects are described in general terms and cleared with employers.
+            Happy to go deeper in conversation — including the parts that didn't work.
+          </p>
+        </div>
+        <div class="hero-links">
+          <a class="btn" href="contact.html">Get in touch</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Alexander Aigner</p>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
