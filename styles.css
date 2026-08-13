@@ -699,7 +699,6 @@ svg {
     border-bottom: 1px solid var(--line);
   }
   .tile-face { padding: 1.4rem 1.5rem 1.5rem; }
-  .tile-body { margin-left: 0; padding: 0 1.5rem 1.6rem; }
 }
 
 .tile-meta { display: block; }
@@ -786,6 +785,13 @@ svg {
 .tile-body p:first-of-type { color: var(--text); }
 .tile-body em { color: var(--text); }
 .tile-body .stack { display: block; margin-top: 1.1rem; }
+
+/* Narrow tile: drop the image-column indent. Must come AFTER the
+   base .tile-body rule — @container adds no cascade priority, so
+   source order decides. */
+@container tile (max-width: 42rem) {
+  .tile-body { margin-left: 0; padding: 0 1.5rem 1.6rem; }
+}
 
 /* Deep links. Each tile body carries an id, so work.html#genealograph
    opens that tile and scrolls to it — browsers expand a closed
